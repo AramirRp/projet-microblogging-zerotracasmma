@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -17,6 +18,16 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/posts', function () {
+    return view('posts');
+});
+
+Route::middleware('comments')->group(function () {
+    Route::get('/Addcomment', [PostController::class, 'create'])->name('posts.create');
+    Route::get('/AddLike', [PostController::class, "update"])->name("posts.update");
+})->middleware(['auth', 'verified'])->name('posts');
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');
