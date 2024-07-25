@@ -1,17 +1,40 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('POSTS') }}
-        </h2>
-    </x-slot>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Posts</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">Posts</h1>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900 dark:text-gray-100">
-                    {{ __("ICI c'EST LES POSTS") }}
-                </div>
+        @if(session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
             </div>
-        </div>
+        @endif
+
+        @if($posts->isEmpty())
+            <p>No posts available.</p>
+        @else
+            <div class="list-group">
+                @foreach($posts as $post)
+                    <div class="list-group-item mb-3">
+                        <h5>{{ $post->content }}</h5>
+                        <p><strong>Likes:</strong> {{ $post->likes_count }}</p>
+                        <p><strong>Tag:</strong> {{ $post->tag }}</p>
+                        <p><strong>Comments:</strong> {{ $post->comments }}</p>
+                        @if($post->mediaUrl)
+                            <p><strong>Media:</strong> <a href="{{ $post->mediaUrl }}" target="_blank">{{ $post->mediaUrl }}</a></p>
+                        @endif
+                        <p><strong>Posted by:</strong> {{ $post->user->name }}</p>
+                        <p><strong>Posted on:</strong> {{ $post->created_at->format('F j, Y, g:i a') }}</p>
+                    </div>
+                @endforeach
+            </div>
+        @endif
     </div>
-</x-app-layout>
+</body>
+</html>

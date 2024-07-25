@@ -8,112 +8,59 @@ use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
-    /**
-     * Display a listing of the posts.
-     */
-    public function index()
-    {
-        $posts = Post::with('user')->latest()->paginate(10);
-        return view('posts.index', compact('posts'));
-    }
-
-    /**
-     * Show the form for creating a new post.
-     */
-    public function create()
-    {
-        return view('posts.create');
-    }
-
-    /**
-     * Store a newly created post in storage.
-     */
     public function store(Request $request)
     {
+        // Validate the incoming request data
         $validatedData = $request->validate([
-            'content' => 'required|max:1000',
-            'tag' => 'required|max:20',
+            'content' => 'required|string',
+            'likes_count' => 'nullable|integer',
+            'tag' => 'nullable|string|max:255',
+            'comments' => 'nullable|string',
             'mediaUrl' => 'nullable|url',
         ]);
 
-        $post = Auth::user()->posts()->create($validatedData);
+        try {
+            // Check if the user is authenticated
+            if (!Auth::check()) {
+                return redirect()->route('login')->with('error', 'You must be logged in to create a post.');
+            }
 
-        return redirect()->route('posts.show', $post)->with('success', 'Post créé avec succès!');
+            // Get the authenticated user
+            $user = Auth::user();
+
+            // Create the post
+            $post = $user->posts()->create([
+                'content' => $validatedData['content'],
+                'likes_count' => $validatedData['likes_count'] ?? 0,
+                'tag' => $validatedData['tag'],
+                'comments' => $validatedData['comments'],
+                'mediaUrl' => $validatedData['mediaUrl'],
+                'user_id' => $user->id,
+            ]);
+
+            // Redirect to the post's show page with a success message
+            return redirect()->route('posts.show', $post->id)->with('success', 'Post created successfully!');
+
+        } catch (\Exception $e) {
+            // Log the error
+            \Log::error('Error creating post: ' . $e->getMessage());
+
+            // Redirect back with an error message
+            return back()->with('error', 'An error occurred while creating the post. Please try again.');
+        }
+
+
+
+        
     }
 
-    /**
-     * Display the specified post.
-     */
-    public function show(Post $post)
+    public function index()
     {
-        return view('posts.show', compact('post'));
+        // Fetch all posts with their associated user
+        $posts = Post::with('user')->get();
+
+        // Pass the posts to the view
+        return view('posts', compact('posts'));
     }
 
-    /**
-     * Show the form for editing the specified post.
-     */
-    public function edit(Post $post)
-    {
-        $this->authorize('update', $post);
-        return view('posts.edit', compact('post'));
-    }
-
-    /**
-     * Update the specified post in storage.
-     */
-    public function update(Request $request, Post $post)
-    {
-        $this->authorize('update', $post);
-
-        $validatedData = $request->validate([
-            'content' => 'required|max:1000',
-            'tag' => 'required|max:20',
-            'mediaUrl' => 'nullable|url',
-        ]);
-
-        $post->update($validatedData);
-
-        return redirect()->route('posts.show', $post)->with('success', 'Post mis à jour avec succès!');
-    }
-
-    /**
-     * Remove the specified post from storage.
-     */
-    public function destroy(Post $post)
-    {
-        $this->authorize('delete', $post);
-        $post->delete();
-        return redirect()->route('posts.index')->with('success', 'Post supprimé avec succès!');
-    }
-
-    /**
-     * Like or unlike a post.
-     */
-    public function like(Post $post)
-    {
-        // Ici, vous devriez implémenter la logique pour liker/unliker un post
-        // Par exemple, vous pourriez utiliser une relation many-to-many avec les utilisateurs
-        // pour les likes, ou simplement incrémenter/décrémenter le compteur de likes
-
-        $post->increment('likes_count');
-        return back()->with('success', 'Post liké!');
-    }
-
-    /**
-     * Add a comment to a post.
-     */
-    public function addComment(Request $request, Post $post)
-    {
-        $validatedData = $request->validate([
-            'coments' => 'required|max:250',
-        ]);
-
-        // Ici, vous devriez implémenter la logique pour ajouter un commentaire
-        // Cela pourrait impliquer la création d'un nouveau modèle Comment
-        // ou l'ajout à un champ JSON, selon votre structure de données
-
-        $post->update(['coments' => $validatedData['coments']]);
-
-        return back()->with('success', 'Commentaire ajouté!');
-    }
 }

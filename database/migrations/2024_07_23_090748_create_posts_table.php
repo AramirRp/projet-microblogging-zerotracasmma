@@ -14,7 +14,7 @@ class CreatePostsTable extends Migration
             $table->text('content');
             $table->integer('likes_count')->default(0);
             $table->string('tag', 20);
-            $table->string('coments', 250);
+            $table->string('comments', 250);
             $table->string('mediaUrl');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

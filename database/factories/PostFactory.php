@@ -26,7 +26,7 @@ class PostFactory extends Factory
             'content' => $this->faker->paragraphs(3, true),
             'likes_count' => $this->faker->numberBetween(0, 1000),
             'tag' => $this->faker->word,
-            'coments' => $this->faker->sentence,
+            'comments' => $this->faker->sentence,
             'mediaUrl' => $this->faker->imageUrl(),
             'user_id' => User::factory(),
         ];

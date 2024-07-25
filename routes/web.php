@@ -19,9 +19,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/posts', function () {
-    return view('posts');
-});
+Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
 
 Route::middleware('comments')->group(function () {
     Route::get('/Addcomment', [PostController::class, 'create'])->name('posts.create');
@@ -38,5 +36,9 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+
+Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
+
 
 require __DIR__.'/auth.php';
