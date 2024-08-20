@@ -20,6 +20,8 @@ Route::get('/', function () {
 });
 
 Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
+Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
+Route::get('/posts/{id}', [PostController::class, 'show'])->name('posts.show');
 
 Route::middleware('comments')->group(function () {
     Route::get('/Addcomment', [PostController::class, 'create'])->name('posts.create');
@@ -37,8 +39,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::get('/posts/users/{user_id}', [PostController::class, 'user'])->name('posts.user');
 
-Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
 
 
 require __DIR__.'/auth.php';

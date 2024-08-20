@@ -47,11 +47,7 @@ class PostController extends Controller
 
             // Redirect back with an error message
             return back()->with('error', 'An error occurred while creating the post. Please try again.');
-        }
-
-
-
-        
+        }        
     }
 
     public function index()
@@ -61,6 +57,24 @@ class PostController extends Controller
 
         // Pass the posts to the view
         return view('posts', compact('posts'));
+    }
+
+    public function show($id)
+    {
+        // Retrieve the post by its ID
+        $post = Post::findOrFail($id);
+
+        // Return the view with the post data
+        return view('posts.show', compact('post'));
+    }
+
+    public function user($user_id)
+    {
+        // Retrieve the post by its ID
+        $post = Post::findOrFail($user_id);
+
+        // Return the view with the post data
+        return view('posts.user', compact('post'));
     }
 
 }
