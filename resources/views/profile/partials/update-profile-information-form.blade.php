@@ -46,6 +46,12 @@
                 </div>
             @endif
         </div>
+        <!-- Champ pour la biographie -->
+        <div>
+            <x-input-label for="biography" :value="__('Biography')" />
+            <textarea name="biography" id="biography" class="mt-1 block w-full rounded-md shadow-sm border-gray-300 dark:bg-gray-700 dark:text-gray-300" rows="4">{{ old('biography', $user->biography) }}</textarea>
+            <x-input-error class="mt-2" :messages="$errors->get('biography')" />
+        </div>
 
         <div class="flex items-center gap-4">
             <x-primary-button>{{ __('Save') }}</x-primary-button>

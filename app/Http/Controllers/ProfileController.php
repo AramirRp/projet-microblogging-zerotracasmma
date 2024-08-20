@@ -28,6 +28,11 @@ class ProfileController extends Controller
     {
         $request->user()->fill($request->validated());
 
+          // Ajouter la mise à jour de la biographie
+        if ($request->has('biography')) {
+        $request->user()->biography = $request->input('biography');
+        }
+         // Réinitialiser la vérification de l'email si l'email a changé
         if ($request->user()->isDirty('email')) {
             $request->user()->email_verified_at = null;
         }
@@ -68,4 +73,7 @@ class ProfileController extends Controller
         // Retourner une vue avec les posts
         return view('user.posts', compact('posts'));
     }
+    
+    
+
 }
