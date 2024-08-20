@@ -18,8 +18,8 @@
             </div>
         @endif
 
-
             <div class="list-group">
+                @foreach ($posts as $post)
                     <div class="list-group-item mb-3">
                         <h5>{{ $post->content }}</h5>
                         <p><strong>Likes:</strong> {{ $post->likes_count }}</p>
@@ -31,6 +31,8 @@
                         <p><strong>Posted by:</strong> {{ $post->user->name }}</p>
                         <p><strong>Posted on:</strong> {{ $post->created_at->format('F j, Y, g:i a') }}</p>
                     </div>
+                    @endforeach
+
             </div>
     </div>
 </body>

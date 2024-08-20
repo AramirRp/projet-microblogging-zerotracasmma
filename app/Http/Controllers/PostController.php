@@ -71,10 +71,10 @@ class PostController extends Controller
     public function user($user_id)
     {
         // Retrieve the post by its ID
-        $post = Post::findOrFail($user_id);
+        $posts = Post::where('user_id', $user_id)->with('user')->get();
 
         // Return the view with the post data
-        return view('posts.user', compact('post'));
+        return view('posts.user', compact('posts'));
     }
 
 }

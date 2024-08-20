@@ -32,7 +32,7 @@
                         @if ($post->mediaUrl)
                             <img src="{{ $post->mediaUrl }}" target="_blank" class="w-20"></img>
                         @endif
-                        <p><strong>Posted by:</strong> {{ $post->user->name }}</p>
+                        <p><strong>Posted by:</strong> <a href="/posts/users/{{$post->user_id}}">{{ $post->user->name }}</a></p>
                         <p><strong>Posted on:</strong> {{ $post->created_at->format('F j, Y, g:i a') }}</p>
                     </div>
                 @endforeach
