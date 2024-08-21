@@ -43,8 +43,6 @@ class PostController extends Controller
 
         } catch (\Exception $e) {
             // Log the error
-            \Log::error('Error creating post: ' . $e->getMessage());
-
             // Redirect back with an error message
             return back()->with('error', 'An error occurred while creating the post. Please try again.');
         }        
@@ -53,7 +51,7 @@ class PostController extends Controller
     public function index()
     {
         // Fetch all posts with their associated user
-        $posts = Post::with('user')->get();
+        $posts = Post::orderBy('created_at', 'desc')->with('user')->get();
 
         // Pass the posts to the view
         return view('posts', compact('posts'));
